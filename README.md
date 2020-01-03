@@ -1,2 +1,2 @@
-# Express-Note-Taker
-an application that can be used to write, save, and delete notes. This application will use an express backend and save and retrieve note data from a JSON file.
+# Express Note Taker
+An application that can be used to write, save, and delete notes. This application will use an express backend and save and retrieve note data from a JSON file.
