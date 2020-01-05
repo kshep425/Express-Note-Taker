@@ -35,8 +35,7 @@ app.get("*", function(req, res) {
   res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
-var notes = require("./db/db")
-
+const fs = require("fs")
 // The application should have a `db.json` file on the backend that will be used to store and retrieve notes using the `fs` module.
 // Add a note
 app.post("/api/notes", function(req, res) {
@@ -53,20 +52,47 @@ app.post("/api/notes", function(req, res) {
   newNote.routeName = newNote.id;
 
   console.log(newNote);
-
-  //notes.push(newNote);
+  fs.readFile(path.join(__dirname, "db/db.json"), (err, data) => {
+    if (err) throw err;
+    console.log(data);
+    let notes = JSON.parse(data)
+    notes.push(newNote);
+    console.log("+++++++++++++notes+++++++++++++")
+    console.log(notes)
+    fs.writeFile(path.join(__dirname, "db/db.json"), JSON.stringify(notes), function(err){
+        if (err) throw err;
+    })
+  });
 
   res.json(newNote);
 });
 
 // Deletes a single note by id, or returns false
 app.delete("/api/notes/:id", function(req, res) {
-  var chosen = req.params.id;
-
+  let chosen = req.params.id;
   console.log(chosen);
-  del_note = "Deleted: " + notes[i]
-  notes.splice(i,1)
-  return res.send(del_note);
+  let filepath = path.join(__dirname, "db/db.json")
+  console.log(filepath);
+    fs.readFile(filepath, "utf8", (err, data) => {
+        if (err) throw err;
+        console.log(data);
+        let notes = JSON.parse(data)
+        for (let index = 0; index < notes.length; index++) {
+            if (notes[index].id === chosen) {
+                let del_note = "Deleted: " + notes[index];
+                notes.splice(index,1);
+                console.log("+++++++++++++notes+++++++++++++");
+                console.log(notes);
+                fs.writeFile(path.join(__dirname, "db/db.json"), JSON.stringify(notes), function(err){
+                    if (err) throw err;
+                    return res.end();
+                });
+            }
+        }
+    })
+
+
+
 });
 
 // Starts the server to begin listening
