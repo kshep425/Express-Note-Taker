@@ -1,5 +1,3 @@
-console.log("Is this working/ index.js?")
-
 var $noteTitle = $(".note-title");
 var $noteText = $(".note-textarea");
 var $saveNoteBtn = $(".save-note");
@@ -53,18 +51,20 @@ var renderActiveNote = function() {
   }
 };
 
+var id_num = 0;
 // Get the note data from the inputs, save it to the db and update the view
 var handleNoteSave = function() {
-    console.log("save note")
-  var newNote = {
-    title: $noteTitle.val(),
-    text: $noteText.val()
-  };
+    id_num += 1;
+    var newNote = {
+        id: id_num,
+        title: $noteTitle.val(),
+        text: $noteText.val()
+    };
 
-  saveNote(newNote).then(function(data) {
-    getAndRenderNotes();
-    renderActiveNote();
-  });
+    saveNote(newNote).then(function(data) {
+        getAndRenderNotes();
+        renderActiveNote();
+    });
 };
 
 // Delete the clicked note
